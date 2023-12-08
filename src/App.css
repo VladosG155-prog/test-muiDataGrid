@@ -1,0 +1,11 @@
+.title {
+	color: red;
+}
+.price {
+	color: green;
+	font-weight: bold;
+}
+.description {
+	color: brown;
+	line-height: 1.1;
+}
