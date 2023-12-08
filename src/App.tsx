@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { DataGrid, useGridApiRef, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import { IProduct } from './types/product.interface';
-import { Box, CircularProgress, Modal } from '@mui/material';
+import { CircularProgress, Modal } from '@mui/material';
 import './App.css';
 import { useSaveGrid } from './hooks/useSaveGrid';
 type Product = Pick<IProduct, 'id' | 'price' | 'image' | 'title' | 'description'> & {
@@ -48,7 +48,7 @@ function App() {
 
 	const [isOpenModal, setIsOpenModal] = useState(false);
 
-	const [modalData, setModalData] = useState<GridCellParams | null>(null);
+	/* const [modalData, setModalData] = useState<GridCellParams | null>(null); */
 	const apiRef = useGridApiRef();
 	const initialState = useSaveGrid(apiRef);
 
@@ -74,7 +74,7 @@ function App() {
 		console.log(data);
 
 		setIsOpenModal(true);
-		setModalData(data);
+		/* 		setModalData(data); */
 	};
 
 	if (!initialState) {
@@ -87,9 +87,8 @@ function App() {
 				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 				open={isOpenModal}
 				onClose={() => setIsOpenModal(false)}>
-				<Box sx={{ width: 400, background: '#fff' }}>
-					{modalData?.value ? <img src={modalData?.value} alt="" /> : null}
-				</Box>
+				<h1>test</h1>
+				{/* 	<Box sx={{ width: 400, background: '#fff' }}>{modalData?.value && modalData.value}</Box> */}
 			</Modal>
 
 			<div style={{ height: 600, width: '100%' }}>
