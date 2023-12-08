@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import { DataGrid, useGridApiRef, GridCellParams, GridColDef } from '@mui/x-data-grid';
+import { useGridApiRef, GridCellParams, GridColDef } from '@mui/x-data-grid';
 import { IProduct } from './types/product.interface';
 import { Box, CircularProgress, Modal } from '@mui/material';
 import './App.css';
 import { useSaveGrid } from './hooks/useSaveGrid';
+import { StyledDataGrid } from './components/CustomDataGrid';
+import { darkTheme, lightTheme } from './themes';
 type Product = Pick<IProduct, 'id' | 'price' | 'image' | 'title' | 'description'> & {
 	date: string;
 };
@@ -46,6 +48,8 @@ const columns: GridColDef[] = [
 function App() {
 	const [products, setProducts] = useState<Product[]>([]);
 
+	const [currTheme, setCurrTheme] = useState(darkTheme);
+
 	const [isOpenModal, setIsOpenModal] = useState(false);
 
 	const [modalData, setModalData] = useState<GridCellParams | null>(null);
@@ -77,12 +81,22 @@ function App() {
 		setModalData(data);
 	};
 
+	const handleTheme = () => {
+		if (currTheme === darkTheme) {
+			setCurrTheme(lightTheme);
+		} else {
+			setCurrTheme(darkTheme);
+		}
+	};
+
 	if (!initialState) {
 		return <CircularProgress />;
 	}
 
 	return (
-		<>
+		<div
+			className="app"
+			style={currTheme === lightTheme ? { background: '#fff' } : { background: '#000' }}>
 			<Modal
 				sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
 				open={isOpenModal}
@@ -94,21 +108,28 @@ function App() {
 						height: 300,
 						display: 'flex',
 						justifyContent: 'center',
+						padding: '20px',
 						alignItems: 'center',
 					}}>
 					{modalData?.field === 'image' ? (
-						<img width={500} height={300} src={modalData.value as string} />
+						<img
+							width={500}
+							height={300}
+							style={{ objectFit: 'contain' }}
+							src={modalData.value as string}
+						/>
 					) : (
-						(modalData?.value as string)
+						<h3>{modalData?.value as string}</h3>
 					)}
 				</Box>
 			</Modal>
-
+			<button onClick={handleTheme}>Сменить тему</button>
 			<div style={{ height: 600, width: '100%' }}>
-				<DataGrid
+				<StyledDataGrid
 					apiRef={apiRef}
 					initialState={{ ...initialState, pagination: { paginationModel: { pageSize: 5 } } }}
 					rows={products}
+					theme={currTheme}
 					getRowHeight={() => 'auto'}
 					columns={columns}
 					getEstimatedRowHeight={() => 300}
@@ -116,7 +137,7 @@ function App() {
 					onCellClick={handleCellClick}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }
 
